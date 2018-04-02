@@ -3,19 +3,17 @@ package com.example.henry.flappybird;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.view.MotionEvent;
+import java.lang.Math;
 
 public class CharacterSprite {
     private Bitmap image;
-    private int xVelocity = 10;
-    public int yVelocity = 0;
-    private int Update_speed = 20;
-    private int jump_speed = 10;
-    private int x_movement_diff = 10; // pixels
+    public double yVelocity = 0;
     private int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
-    public int x = screenWidth * 3/10, y = screenHeight *5/12;
+    public  int x = screenWidth * 3/10, y = screenHeight *5/12;
+    private double jump_height = screenHeight/12.0;
+    private double prevVelocity = -1 * Math.sqrt(2*7.63 * jump_height);
+    private float yPos;
 
 
     public CharacterSprite (Bitmap bmp) {
@@ -23,12 +21,21 @@ public class CharacterSprite {
     }
 
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(image, x - image.getWidth()/2, y - image.getHeight() , null);
+        canvas.drawBitmap(image, x - (image.getWidth() / 2), y - image.getHeight(), null);
     }
 
-    public void update() {
-        y += yVelocity * Update_speed;
-        yVelocity += 9.81 * Update_speed;
+    public void update(boolean updateCharacter) {
+
+        if (updateCharacter) {
+            prevVelocity = -1 * Math.sqrt(2*7.63 * jump_height);
+        }
+        yVelocity = prevVelocity + 7.63 * GameView.Update_speed / 1000;
+        System.out.println("Velocity: " + yVelocity);
+        System.out.println("Previous Velocity: " + prevVelocity);
+        y += (float) yVelocity * GameView.Update_speed / 1000 / 2;
+
+        prevVelocity = yVelocity;
+
     }
 
 

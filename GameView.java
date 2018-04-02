@@ -18,7 +18,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private MainThread thread;
     public static int gapHeight = 200;
-    public int jump_speed = 10;
     private pipeSprite pipe1;
     private pipeSprite pipe2;
     private pipeSprite pipe3;
@@ -29,7 +28,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
 
     public static double startTime;
-    private int Update_speed = 20;
+    public static int Update_speed = 25;
+    public static double timeDiff;
+    public static double touchDiff;
+
+    private boolean updateCharacter;
 
     public GameView(Context context) {
         super(context);
@@ -72,7 +75,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        characterSprite.yVelocity = -jump_speed;
+        updateCharacter = true;
+        touchDiff = System.currentTimeMillis();
         return super.onTouchEvent(event);
     }
 
@@ -95,12 +99,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-        if (System.currentTimeMillis() - startTime >= Update_speed ) {
+        timeDiff = System.currentTimeMillis() - startTime;
+        if (timeDiff >= Update_speed ) {
             logic();
             pipe1.update();
             pipe2.update();
             pipe3.update();
-            characterSprite.update();
+            characterSprite.update(updateCharacter);
+            updateCharacter = false;
 
             startTime = System.currentTimeMillis();
         }
@@ -143,27 +149,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         pipes.add(pipe2);
         pipes.add(pipe3);
         int spacing = 500;
-        // int prevVal = -700;
 
         for (int i = 0; i < pipes.size(); i++) {
             if (pipes.get(i).xX + 200 < 0) {
                 Random r = new Random();
                 int value2 = r.nextInt(-500 + 1 +900 ) - 900;
-                /*
-                while (prevVal - 30 < value2 && prevVal + 30 > value2) {
-                    r = new Random();
-                    value2 = r.nextInt(-500 + 1 +900 ) - 900;
-                }
-                */
                 pipes.get(i).xX = spacing * 3;
                 pipes.get(i).yY = value2;
-                /*
-                int k;
-                k = i;
-                if (k < 0)
-                    k = 2;
-                prevVal = pipes.get(k - 1).yY;
-                */
             }
         }
     }
