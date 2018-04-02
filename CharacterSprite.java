@@ -12,7 +12,7 @@ public class CharacterSprite {
     private int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
     public  int x = screenWidth * 3/10, y = screenHeight *5/12;
     private double jump_height = screenHeight/12.0;
-    private double prevVelocity = -1 * Math.sqrt(2*7.63 * jump_height);
+    private double prevVelocity = 0;
     private float yPos;
 
 
@@ -27,12 +27,13 @@ public class CharacterSprite {
     public void update(boolean updateCharacter) {
 
         if (updateCharacter) {
-            prevVelocity = -1 * Math.sqrt(2*7.63 * jump_height);
+            prevVelocity = -1 * Math.sqrt(2*7.63 * jump_height/15);
         }
-        yVelocity = prevVelocity + 7.63 * GameView.Update_speed / 1000;
+        yVelocity = prevVelocity + 19.6 * GameView.Update_speed / 1000;
         System.out.println("Velocity: " + yVelocity);
-        System.out.println("Previous Velocity: " + prevVelocity);
-        y += (float) yVelocity * GameView.Update_speed / 1000 / 2;
+        //System.out.println("Previous Velocity: " + prevVelocity);
+        y += (float) yVelocity;
+        System.out.println("y pos: " + y);
 
         prevVelocity = yVelocity;
 
